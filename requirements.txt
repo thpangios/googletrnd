@@ -2,3 +2,4 @@ fastapi==0.109.0
 uvicorn==0.27.0
 pytrends==4.9.2
 pandas==2.1.4
+requests==2.31.0
