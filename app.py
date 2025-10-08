@@ -124,19 +124,20 @@ def get_trends_batch(keywords: str, timeframe: str = "today 3-m", geo: str = "US
     for i, keyword in enumerate(keyword_list):
         try:
             result = get_trends(keyword=keyword, timeframe=timeframe, geo=geo)
-            results.append(result)
+            results.append(result)  # ✅ Result added here
             
-            # Longer delay between batch items
+            # Delay between batch items
             if i < len(keyword_list) - 1:
                 time.sleep(random.uniform(8, 15))
                 
         except HTTPException as e:
             if e.status_code == 429:
                 return {
-                    "results": results,
+                    "results": results,  # ✅ Whatever we got so far
                     "partial": True,
-                    "completed": i + 1,
+                    "completed": len(results),  # ✅ Fixed: actual count
                     "total": len(keyword_list),
+                    "failed_on": keyword,  # ✅ Added: which keyword failed
                     "error": "Rate limited - partial results"
                 }
             raise
@@ -144,7 +145,7 @@ def get_trends_batch(keywords: str, timeframe: str = "today 3-m", geo: str = "US
     return {
         "results": results,
         "partial": False,
-        "completed": len(keyword_list),
+        "completed": len(results),
         "total": len(keyword_list)
     }
 
